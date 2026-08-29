@@ -10,6 +10,8 @@ import { BookingsService } from './bookings.service';
 import { VisitorsService } from './visitors.service';
 import { CommunityService } from './community.service';
 import { CommunityController } from './community.controller';
+import { AnnouncementsService } from './announcements.service';
+import { AnnouncementsController } from './announcements.controller';
 import { BookingsController } from './bookings.controller';
 import { NotificationsModule } from '../notifications/notifications.module';
 
@@ -19,8 +21,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
     TypeOrmModule.forFeature([Booking, Bed, InstallmentPlan, Installment]),
     NotificationsModule,
   ],
-  controllers: [BookingsController, CommunityController],
-  providers: [BookingsService, VisitorsService, CommunityService],
+  controllers: [BookingsController, CommunityController, AnnouncementsController],
+  providers: [BookingsService, VisitorsService, CommunityService, AnnouncementsService],
   exports: [BookingsService],
 })
 export class BookingsModule {}
