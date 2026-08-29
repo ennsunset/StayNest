@@ -9,4 +9,8 @@ export class InitializePaymentDto {
   @IsOptional()
   @IsString()
   callbackUrl?: string;
+
+  @IsOptional()
+  @IsUUID()
+  installmentId?: string;
 }

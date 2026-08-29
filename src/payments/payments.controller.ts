@@ -32,6 +32,7 @@ export class PaymentsController {
       req.user.sub,
       req.user.email,
       dto.callbackUrl,
+      dto.installmentId,
     );
   }
 

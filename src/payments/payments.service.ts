@@ -25,7 +25,7 @@ export class PaymentsService {
 
   // ── Initialize payment ────────────────────────────
 
-  async initializePayment(bookingId: string, studentId: string, email: string, callbackUrl?: string) {
+  async initializePayment(bookingId: string, studentId: string, email: string, callbackUrl?: string, installmentId?: string) {
     // 1. Load booking
     const booking = await this.bookingRepo.findOne({ where: { id: bookingId } });
     if (!booking) throw new NotFoundException('Booking not found');
@@ -55,7 +55,7 @@ export class PaymentsService {
       bookingId,
       providerReference: paymentRef,
       status: PaymentStatus.PENDING,
-      amountPesewas: booking.totalPesewas,
+      amountPesewas: booking.paymentType === 'INSTALLMENT' ? Math.floor(Number(booking.totalPesewas) / 2) : booking.totalPesewas,
       currency: 'GHS',
     });
     await this.paymentRepo.save(payment);
@@ -63,10 +63,24 @@ export class PaymentsService {
     // 6. Transition booking to PENDING_PAYMENT
     await this.bookingRepo.update(bookingId, { status: BookingStatus.PENDING_PAYMENT });
 
-    // 7. Initialize Paystack
+    // 7. Initialize Paystack — use installment amount if paying a specific installment
+    let chargeAmount: number;
+    if (installmentId) {
+      // Paying a specific installment (e.g. installment 2)
+      const [inst] = await this.dataSource.query(
+        `SELECT amount_pesewas FROM installments WHERE id = $1`,
+        [installmentId],
+      );
+      if (!inst) throw new NotFoundException('Installment not found');
+      chargeAmount = parseInt(inst.amount_pesewas, 10);
+    } else if (booking.paymentType === 'INSTALLMENT') {
+      chargeAmount = Math.floor(Number(booking.totalPesewas) / 2);
+    } else {
+      chargeAmount = Number(booking.totalPesewas);
+    }
     const result = await this.paystack.initialize({
       reference: paymentRef,
-      amountPesewas: Number(booking.totalPesewas),
+      amountPesewas: chargeAmount,
       email,
       callbackUrl,
       metadata: { bookingId, bookingReference: booking.reference },
