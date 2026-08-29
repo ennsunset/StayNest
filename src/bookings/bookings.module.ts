@@ -7,6 +7,9 @@ import { Booking } from './entities/booking.entity';
 import { InstallmentPlan, Installment } from './entities/installment.entity';
 import { Bed } from '../hostels/entities/hostel.entity';
 import { BookingsService } from './bookings.service';
+import { VisitorsService } from './visitors.service';
+import { CommunityService } from './community.service';
+import { CommunityController } from './community.controller';
 import { BookingsController } from './bookings.controller';
 import { NotificationsModule } from '../notifications/notifications.module';
 
@@ -16,8 +19,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
     TypeOrmModule.forFeature([Booking, Bed, InstallmentPlan, Installment]),
     NotificationsModule,
   ],
-  controllers: [BookingsController],
-  providers: [BookingsService],
+  controllers: [BookingsController, CommunityController],
+  providers: [BookingsService, VisitorsService, CommunityService],
   exports: [BookingsService],
 })
 export class BookingsModule {}

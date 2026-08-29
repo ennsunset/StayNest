@@ -5,6 +5,7 @@ import { NotFoundException,
   UseGuards, ParseUUIDPipe,
 } from '@nestjs/common';
 import { BookingsService } from './bookings.service';
+import { VisitorsService } from './visitors.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard, Roles } from '../auth/roles.guard';
 import { UserRole } from '../users/entities/user.entity';
@@ -13,7 +14,7 @@ import { CreateBookingDto, CancelBookingDto } from './bookings.dto';
 @Controller('bookings')
 @UseGuards(JwtAuthGuard)
 export class BookingsController {
-  constructor(private readonly bookings: BookingsService) {}
+  constructor(private readonly bookings: BookingsService, private readonly visitors: VisitorsService) {}
 
   /** Hold a bed — the student taps "Book" */
   @Post()
@@ -129,6 +130,37 @@ export class BookingsController {
     @Body() body: { paymentReference: string },
   ) {
     return this.bookings.payInstallment(installmentId, body.paymentReference);
+  }
+
+
+  /** Verify a visitor pass (security/owner scan) */
+  @Get('visitors/verify/:token')
+  async verifyVisitorPass(@Param('token') token: string) {
+    return this.visitors.verifyPass(token);
+  }
+
+  /** Delete a visitor pass (only non-active) */
+  @Patch('visitors/:passId/delete')
+  async deleteVisitorPass(@Req() req: any, @Param('passId') passId: string) {
+    return this.visitors.deletePass(passId, req.user.sub);
+  }
+
+  /** Revoke a visitor pass */
+  @Patch('visitors/:passId/revoke')
+  async revokeVisitorPass(@Req() req: any, @Param('passId') passId: string) {
+    return this.visitors.revokePass(passId, req.user.sub);
+  }
+
+  /** Create a visitor pass */
+  @Post(':id/visitors')
+  async createVisitorPass(@Req() req: any, @Param('id') bookingId: string, @Body() body: { visitorName: string; visitorPhone?: string; purpose?: string }) {
+    return this.visitors.createPass(req.user.sub, bookingId, body);
+  }
+
+  /** List visitor passes for a booking */
+  @Get(':id/visitors')
+  async getVisitorPasses(@Req() req: any, @Param('id') bookingId: string) {
+    return this.visitors.getPassesForBooking(bookingId, req.user.sub);
   }
 
 }
