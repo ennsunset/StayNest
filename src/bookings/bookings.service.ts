@@ -370,9 +370,12 @@ export class BookingsService {
     });
 
     // If installment booking, create the plan after transaction commits
-    if (result.paymentType === 'INSTALLMENT') {
-      this.createInstallmentPlan(result.id).catch((err) =>
-        this.logger.error(`Failed to create installment plan for ${result.id}: ${err.message}`),
+    const [ptRow] = await this.dataSource.query(
+      `SELECT payment_type FROM bookings WHERE id = $1`, [bookingId],
+    );
+    if (ptRow?.payment_type === 'INSTALLMENT') {
+      this.createInstallmentPlan(bookingId).catch((err) =>
+        this.logger.error(`Failed to create installment plan for ${bookingId}: ${err.message}`),
       );
     }
 
