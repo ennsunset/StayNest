@@ -320,24 +320,25 @@ class _HostelRow extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.star_outline_rounded,
-                              size: 12,
-                              color: const Color(0xFFEAB308),
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              item.rating.toStringAsFixed(1),
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                color: c.foreground,
+                        if (item.rating > 0)
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.star_rounded,
+                                size: 12,
+                                color: const Color(0xFFEAB308),
                               ),
-                            ),
-                          ],
-                        ),
+                              const SizedBox(width: 4),
+                              Text(
+                                item.rating.toStringAsFixed(1),
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w900,
+                                  color: c.foreground,
+                                ),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ],

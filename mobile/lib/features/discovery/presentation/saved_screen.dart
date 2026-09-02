@@ -84,8 +84,35 @@ class SavedScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(
                 SNSpace.screenX, SNSpace.x4, SNSpace.screenX, SNSpace.x4,
               ),
-              child: Text('Saved Hostels',
-                style: SNText.headingLg.copyWith(color: c.foreground)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Saved Hostels',
+                    style: SNText.headingLg.copyWith(color: c.foreground)),
+                  if (savedIds.length >= 2)
+                    GestureDetector(
+                      onTap: () => context.push(
+                        '/compare-hostels',
+                        extra: savedIds.toList(),
+                      ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: c.primary,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.compare_arrows_rounded, size: 16, color: c.primaryForeground),
+                            const SizedBox(width: 6),
+                            Text('Compare', style: SNText.caption.copyWith(color: c.primaryForeground, fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
 
             // Filter pills

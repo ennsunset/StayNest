@@ -339,6 +339,8 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         location: h.address,
                         imageUrl: hostels[i].imageUrls.isNotEmpty ? hostels[i].imageUrls.first : null,
                         fromPricePesewas: h.fromPricePesewas,
+                        rating: (h.averageRating ?? 0) > 0 ? h.averageRating : null,
+                        reviewCount: (h.reviewCount ?? 0) > 0 ? h.reviewCount : null,
                         verified: h.verified,
                         amenities: h.amenities.take(3).map((a) => AmenityChip(label: a.name, icon: _amenityIcon(a.name))).toList(),
                         onTap: () => context.push('/home/hostel/${h.id}'),
