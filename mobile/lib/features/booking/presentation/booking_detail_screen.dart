@@ -185,8 +185,12 @@ class _Body extends ConsumerWidget {
           SNSectionLabel('Price Breakdown'),
           const SizedBox(height: SNSpace.x4),
           TransactionRow(label: 'Room fee', amountPesewas: booking.pricePesewas),
+          if ((booking.bed?.room?.securityDepositPesewas ?? 0) > 0) ...[
+            const SizedBox(height: SNSpace.x3),
+            TransactionRow(label: 'Security Deposit (Refundable)', amountPesewas: booking.bed?.room?.securityDepositPesewas ?? 0),
+          ],
           const SizedBox(height: SNSpace.x3),
-          TransactionRow(label: 'Platform fee', amountPesewas: booking.platformFeePesewas),
+          TransactionRow(label: 'StayNest Service Fee', amountPesewas: booking.platformFeePesewas),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: SNSpace.x4),
             child: Divider(height: 1, color: c.border),
@@ -773,8 +777,12 @@ class _TenantDashboard extends ConsumerWidget {
                     child: Divider(height: 1, color: c.border),
                   ),
                   TransactionRow(label: 'Room fee', amountPesewas: booking.pricePesewas),
+                  if ((booking.bed?.room?.securityDepositPesewas ?? 0) > 0) ...[
+                    const SizedBox(height: SNSpace.x3),
+                    TransactionRow(label: 'Security Deposit (Refundable)', amountPesewas: booking.bed?.room?.securityDepositPesewas ?? 0),
+                  ],
                   const SizedBox(height: SNSpace.x3),
-                  TransactionRow(label: 'Platform fee', amountPesewas: booking.platformFeePesewas),
+                  TransactionRow(label: 'StayNest Service Fee', amountPesewas: booking.platformFeePesewas),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: SNSpace.x3),
                     child: Divider(height: 1, color: c.border),

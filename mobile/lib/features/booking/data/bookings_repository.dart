@@ -158,6 +158,7 @@ class BookingRoomDetail {
     required this.number,
     required this.type,
     required this.pricePesewas,
+    this.securityDepositPesewas = 0,
     this.hostelName,
     this.hostelId,
     this.imageUrl,
@@ -167,6 +168,7 @@ class BookingRoomDetail {
   final String number;
   final String type;
   final int pricePesewas;
+  final int securityDepositPesewas;
   final String? hostelName;
   final String? hostelId;
   final String? imageUrl;
@@ -193,6 +195,7 @@ class BookingRoomDetail {
       number: json['number'] as String,
       type: json['type'] as String,
       pricePesewas: _safeInt(json['price_pesewas'] ?? json['pricePesewas']),
+      securityDepositPesewas: _safeInt(json['securityDepositPesewas'] ?? json['security_deposit_pesewas'] ?? 0),
       hostelName: hostelName,
       hostelId: hostelId,
       imageUrl: hostelImageUrl,

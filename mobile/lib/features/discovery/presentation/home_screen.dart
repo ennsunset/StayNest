@@ -288,12 +288,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: SNSpace.screenX),
       child: GridView.count(
-        crossAxisCount: 3,
+        crossAxisCount: 4,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         mainAxisSpacing: SNSpace.x3,
-        crossAxisSpacing: SNSpace.x3,
-        childAspectRatio: 1.1,
+        crossAxisSpacing: SNSpace.x2,
+        childAspectRatio: 0.85,
         children: items.map((a) {
           return _AmenityTile(label: a.$1, icon: a.$2, onTap: () => context.push('/home/search-results'));
         }).toList(),
@@ -313,24 +313,20 @@ class _AmenityTile extends StatelessWidget {
     final c = context.sn;
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: c.card,
-          borderRadius: SNRadius.card,
-          border: Border.all(color: c.border),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              height: 44, width: 44,
-              decoration: BoxDecoration(color: c.muted, borderRadius: BorderRadius.circular(SNRadius.sm)),
-              child: Icon(icon, size: 22, color: c.primary),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 56, width: 56,
+            decoration: BoxDecoration(
+              color: c.muted,
+              shape: BoxShape.circle,
             ),
-            const SizedBox(height: SNSpace.x2),
-            Text(label, style: SNText.caption.copyWith(color: c.foreground), textAlign: TextAlign.center, maxLines: 2),
-          ],
-        ),
+            child: Icon(icon, size: 24, color: c.foreground),
+          ),
+          const SizedBox(height: SNSpace.x2),
+          Text(label, style: SNText.caption.copyWith(color: c.mutedForeground, fontWeight: FontWeight.w700, fontSize: 10), textAlign: TextAlign.center, maxLines: 2),
+        ],
       ),
     );
   }
