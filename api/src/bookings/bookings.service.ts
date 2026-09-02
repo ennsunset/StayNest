@@ -49,7 +49,7 @@ export class BookingsService {
 
       // 2. Row lock on the bed
       const bed = await manager.query(
-        `SELECT b.id, b.status, b.room_id, r.price_pesewas
+        `SELECT b.id, b.status, b.room_id, r.price_pesewas, r.security_deposit_pesewas
          FROM beds b
          JOIN rooms r ON r.id = b.room_id
          WHERE b.id = $1
@@ -91,7 +91,8 @@ export class BookingsService {
         pricePesewas = semesterPrice;
       }
       const platformFeePesewas = Math.round(pricePesewas * PLATFORM_FEE_RATE);
-      const totalPesewas = pricePesewas + platformFeePesewas;
+      const securityDepositPesewas = parseInt(bedRow.security_deposit_pesewas, 10) || 0;
+      const totalPesewas = pricePesewas + platformFeePesewas + securityDepositPesewas;
 
       // 5. Set hold
       const heldUntil = new Date(Date.now() + HOLD_MINUTES * 60 * 1000);
