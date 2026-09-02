@@ -92,8 +92,8 @@ class HostelCard extends StatelessWidget {
                   ),
                 if (onToggleSave != null)
                   Positioned(
-                    top: SNSpace.x3,
-                    left: SNSpace.x3,
+                    bottom: SNSpace.x3,
+                    right: SNSpace.x3,
                     child: _SaveButton(
                       saved: saved ?? false,
                       onTap: onToggleSave!,
@@ -106,15 +106,26 @@ class HostelCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: SNText.headingMd.copyWith(color: c.foreground),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: SNText.headingMd.copyWith(color: c.foreground),
+                        ),
+                      ),
+                      if (rating != null)
+                        RatingStars(rating: rating!, reviewCount: reviewCount),
+                    ],
                   ),
                   const SizedBox(height: SNSpace.x1),
                   _locationLine(c),
-                  const SizedBox(height: SNSpace.x3),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: SNSpace.x3),
+                    child: Divider(height: 1, color: c.border.withValues(alpha: 0.5)),
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -122,16 +133,14 @@ class HostelCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Starts from', style: SNText.caption.copyWith(color: c.mutedForeground, fontSize: 10)),
+                          Text('STARTS FROM', style: SNText.microAction.copyWith(color: c.mutedForeground, fontSize: 9, letterSpacing: 1.5)),
                           const SizedBox(height: 2),
                           Text(
                             Money.formatCompact(fromPricePesewas),
-                            style: SNText.headingLg.copyWith(color: c.foreground),
+                            style: SNText.headingMd.copyWith(color: c.primary),
                           ),
                         ],
                       ),
-                      if (rating != null)
-                        RatingStars(rating: rating!, reviewCount: reviewCount),
                     ],
                   ),
                 ],

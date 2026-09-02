@@ -171,6 +171,7 @@ class _SelectBedScreenState extends ConsumerState<SelectBedScreen> {
       'roomId': room.id,
       'bookingMode': room.bookingMode,
       'semesterPricePesewas': room.semesterPricePesewas,
+      'securityDepositPesewas': room.securityDepositPesewas,
     });
   }
 

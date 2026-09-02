@@ -200,8 +200,8 @@ class _SearchResultsScreenState extends ConsumerState<SearchResultsScreen> {
                 location: h.address,
                 imageUrl: h.imageUrls.isNotEmpty ? h.imageUrls.first : null,
                 fromPricePesewas: h.fromPricePesewas,
-                rating: h.averageRating,
-                reviewCount: h.reviewCount,
+                rating: (h.averageRating ?? 0) > 0 ? h.averageRating : null,
+                reviewCount: (h.reviewCount ?? 0) > 0 ? h.reviewCount : null,
                 verified: h.verified,
                 amenities: h.amenities
                     .take(3)

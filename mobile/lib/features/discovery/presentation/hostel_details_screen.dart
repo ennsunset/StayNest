@@ -368,7 +368,7 @@ class _HostelDetailsScreenState extends ConsumerState<HostelDetailsScreen> {
                             )),
                           ),
                           const SizedBox(height: 2),
-                          Text('\$count \${count == 1 ? "review" : "reviews"}',
+                          Text('$count ${count == 1 ? 'review' : 'reviews'}',
                             style: SNText.caption.copyWith(color: c.mutedForeground)),
                         ],
                       ),

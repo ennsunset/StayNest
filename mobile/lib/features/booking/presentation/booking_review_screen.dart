@@ -161,7 +161,6 @@ class _BookingReviewScreenState extends ConsumerState<BookingReviewScreen> {
                   SNSectionLabel('Price Breakdown'),
                   const SizedBox(height: SNSpace.x4),
                   TransactionRow(label: 'Room fee', amountPesewas: _activePricePesewas),
-                  const SizedBox(height: SNSpace.x3),
                   if (_securityDepositPesewas > 0)
                     TransactionRow(label: 'Security Deposit (Refundable)', amountPesewas: _securityDepositPesewas),
                   TransactionRow(label: 'StayNest Service Fee', amountPesewas: _platformFeePesewas),

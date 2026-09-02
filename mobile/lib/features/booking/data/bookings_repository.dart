@@ -217,6 +217,7 @@ class RoomWithBeds {
     this.imageUrl,
     this.bookingMode = 'FLEXIBLE',
     this.semesterPricePesewas,
+    this.securityDepositPesewas = 0,
   });
 
   final String id;
@@ -234,6 +235,7 @@ class RoomWithBeds {
   final String? imageUrl;
   final String bookingMode;
   final int? semesterPricePesewas;
+  final int securityDepositPesewas;
 
   factory RoomWithBeds.fromJson(Map<String, dynamic> json) {
     String? hostelName;
@@ -278,6 +280,7 @@ class RoomWithBeds {
       socketCount: (json['socketCount'] ?? json['socket_count'] ?? 1) is int ? (json['socketCount'] ?? json['socket_count'] ?? 1) : int.tryParse((json['socketCount'] ?? json['socket_count'] ?? '1').toString()) ?? 1,
       imageUrl: hostelImageUrl,
       hasPrivateBath: json['hasPrivateBath'] as bool? ?? json['has_private_bath'] as bool? ?? false,
+      securityDepositPesewas: int.tryParse((json['securityDepositPesewas'] ?? json['security_deposit_pesewas'] ?? '0').toString()) ?? 0,
     );
   }
 }

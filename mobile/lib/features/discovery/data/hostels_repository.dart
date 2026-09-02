@@ -141,7 +141,7 @@ class Hostel {
               availableBeds: available,
               totalBeds: beds.length,
               imageUrls: roomImages,
-              securityDepositPesewas: (r['securityDepositPesewas'] as num?)?.toInt()
+              securityDepositPesewas: int.tryParse((r['securityDepositPesewas'] ?? r['security_deposit_pesewas'] ?? '0').toString()) ?? 0
                   ?? (r['security_deposit_pesewas'] as num?)?.toInt()
                   ?? 0,
             ));

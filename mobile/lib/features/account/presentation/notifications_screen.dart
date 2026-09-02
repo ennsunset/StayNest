@@ -66,45 +66,64 @@ class NotificationsScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                Expanded(child: ListView.separated(
+                Expanded(child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: SNSpace.x4),
+              padding: const EdgeInsets.symmetric(horizontal: SNSpace.screenX, vertical: SNSpace.x4),
               itemCount: result.data.length,
-              separatorBuilder: (_, __) => Divider(height: 1, indent: SNSpace.screenX + 48 + SNSpace.x4, color: c.border),
-              itemBuilder: (_, i) => Dismissible(
-                key: ValueKey(result.data[i].id),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: SNSpace.screenX),
-                  color: Colors.red,
-                  child: const Icon(Icons.delete_outline, color: Colors.white),
-                ),
-                confirmDismiss: (_) async {
-                  await ref.read(notificationsRepositoryProvider).deleteNotification(result.data[i].id);
-                  ref.invalidate(notificationsProvider);
-                  ref.invalidate(unreadNotificationsProvider);
-                  return false;
-                },
-                child: _NotificationTile(
-                notif: result.data[i],
-                onTap: () async {
-                  if (!result.data[i].isRead) {
-                    await ref.read(notificationsRepositoryProvider).markAsRead(result.data[i].id);
-                    ref.invalidate(notificationsProvider);
-                    ref.invalidate(unreadNotificationsProvider);
-                  }
-                  final data = result.data[i].data;
-                  if (data != null && context.mounted) {
-                    if (data['bookingId'] != null) {
-                      context.push('/booking/${data['bookingId']}');
-                    } else if (data['conversationId'] != null) {
-                      context.push('/messages/${data['conversationId']}', extra: {'hostelName': data['hostelName'] ?? 'Chat'});
-                    }
-                  }
-                },
-              ),
-            ),
+              itemBuilder: (_, i) {
+                final notif = result.data[i];
+                // Day group header
+                Widget? header;
+                final label = _dayLabel(notif.createdAt);
+                if (i == 0 || _dayLabel(result.data[i - 1].createdAt) != label) {
+                  header = Padding(
+                    padding: EdgeInsets.only(top: i == 0 ? 0 : SNSpace.x5, bottom: SNSpace.x3),
+                    child: Text(label, style: SNText.microAction.copyWith(
+                      color: c.mutedForeground, fontSize: 10, letterSpacing: 2, fontWeight: FontWeight.w900)),
+                  );
+                }
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (header != null) header,
+                    Dismissible(
+                      key: ValueKey(notif.id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.only(right: 20),
+                        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(16)),
+                        child: const Icon(Icons.delete_outline, color: Colors.white),
+                      ),
+                      confirmDismiss: (_) async {
+                        await ref.read(notificationsRepositoryProvider).deleteNotification(notif.id);
+                        ref.invalidate(notificationsProvider);
+                        ref.invalidate(unreadNotificationsProvider);
+                        return false;
+                      },
+                      child: _NotificationTile(
+                        notif: notif,
+                        onTap: () async {
+                          if (!notif.isRead) {
+                            await ref.read(notificationsRepositoryProvider).markAsRead(notif.id);
+                            ref.invalidate(notificationsProvider);
+                            ref.invalidate(unreadNotificationsProvider);
+                          }
+                          final data = notif.data;
+                          if (data != null && context.mounted) {
+                            if (data['bookingId'] != null) {
+                              context.push('/booking/${data['bookingId']}');
+                            } else if (data['conversationId'] != null) {
+                              context.push('/messages/${data['conversationId']}', extra: {'hostelName': data['hostelName'] ?? 'Chat'});
+                            }
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                );
+              },
             )),
               ],
             ),
@@ -112,6 +131,16 @@ class NotificationsScreen extends ConsumerWidget {
         },
       ),
     );
+  }
+
+  static String _dayLabel(DateTime dt) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(dt.year, dt.month, dt.day);
+    if (d == today) return 'TODAY';
+    if (d == today.subtract(const Duration(days: 1))) return 'YESTERDAY';
+    if (now.difference(dt).inDays < 7) return '${now.difference(dt).inDays} DAYS AGO';
+    return 'EARLIER';
   }
 }
 
@@ -149,8 +178,12 @@ class _NotificationTile extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
-        color: notif.isRead ? Colors.transparent : c.primary.withOpacity(0.04),
-        padding: const EdgeInsets.symmetric(horizontal: SNSpace.screenX, vertical: SNSpace.x4),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: notif.isRead ? c.card : c.primary.withValues(alpha: 0.04),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: notif.isRead ? c.border : c.primary.withValues(alpha: 0.15)),
+        ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

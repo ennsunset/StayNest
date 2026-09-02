@@ -8,6 +8,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:staynest_mobile/features/account/data/notifications_repository.dart';
 import 'package:go_router/go_router.dart';
+import 'package:staynest_mobile/features/discovery/presentation/saved_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:staynest_mobile/core/theme/theme.dart';
@@ -252,14 +253,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           separatorBuilder: (_, __) => const SizedBox(width: SNSpace.cardGap),
           itemBuilder: (_, i) {
             final h = hostels[i];
+            final savedIds = ref.watch(savedHostelIdsProvider);
             return HostelCard.featured(
               name: h.name,
               location: h.address,
               imageUrl: h.imageUrls.isNotEmpty ? h.imageUrls.first : null,
               fromPricePesewas: h.fromPricePesewas,
-              rating: h.averageRating,
-              reviewCount: h.reviewCount,
+              rating: (h.averageRating ?? 0) > 0 ? h.averageRating : null,
+              reviewCount: (h.reviewCount ?? 0) > 0 ? h.reviewCount : null,
               verified: h.verified,
+              saved: savedIds.contains(h.id),
+              onToggleSave: () => ref.read(savedHostelIdsProvider.notifier).toggle(h.id),
               onTap: () {
                 context.push('/home/hostel/${h.id}');
               },
