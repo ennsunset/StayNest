@@ -91,7 +91,7 @@ class SavedScreen extends ConsumerWidget {
                     style: SNText.headingLg.copyWith(color: c.foreground)),
                   if (savedIds.length >= 2)
                     GestureDetector(
-                      onTap: () => context.push(
+                      onTap: () => context.go(
                         '/compare-hostels',
                         extra: savedIds.toList(),
                       ),
