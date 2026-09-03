@@ -377,7 +377,7 @@ final router = GoRouter(
     ),
     GoRoute(path: Routes.paymentHistory, builder: (_, __) => const PaymentHistoryScreen()),
     GoRoute(path: Routes.compareHostels, builder: (context, state) {
-      final ids = state.uri.queryParameters['ids']?.split(',') ?? [];
+      final ids = (state.extra as List<String>?) ?? state.uri.queryParameters['ids']?.split(',') ?? [];
       return CompareHostelsScreen(hostelIds: ids);
     }),
     GoRoute(path: Routes.recentlyViewed, builder: (_, __) => const RecentlyViewedScreen()),
