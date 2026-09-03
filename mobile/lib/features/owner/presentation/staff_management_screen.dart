@@ -58,12 +58,12 @@ class StaffManagementScreen extends ConsumerWidget {
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(name, style: SNText.bodyBold.copyWith(color: c.foreground)),
                   const SizedBox(height: 2),
-                  Text('\$role \u2022 \$status', style: SNText.microAction.copyWith(color: status == 'ACTIVE' ? const Color(0xFF16A34A) : c.mutedForeground, letterSpacing: 1)),
+                  Text('$role \u2022 $status', style: SNText.microAction.copyWith(color: status == 'ACTIVE' ? const Color(0xFF16A34A) : c.mutedForeground, letterSpacing: 1)),
                   if (hostel.isNotEmpty) Text(hostel, style: SNText.caption.copyWith(color: c.mutedForeground)),
                 ])),
                 IconButton(icon: Icon(Icons.delete_outline, size: 20, color: c.destructive), onPressed: () async {
                   final ok = await showDialog<bool>(context: context, builder: (d) => AlertDialog(
-                    title: const Text('Remove Staff?'), content: Text('Remove \$name?'),
+                    title: const Text('Remove Staff?'), content: Text('Remove $name?'),
                     actions: [TextButton(onPressed: () => Navigator.pop(d, false), child: const Text('Cancel')), TextButton(onPressed: () => Navigator.pop(d, true), child: Text('Remove', style: TextStyle(color: c.destructive)))],
                   ));
                   if (ok == true) { try { await ref.read(ownerRepositoryProvider).removeStaff(s['id'] as String); ref.invalidate(ownerStaffProvider); } catch (_) {} }

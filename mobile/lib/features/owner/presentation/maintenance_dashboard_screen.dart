@@ -48,7 +48,7 @@ class _MaintenanceDashboardScreenState extends ConsumerState<MaintenanceDashboar
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
               child: Row(children: List.generate(_tabs.length, (i) {
                 final active = i == _tab;
-                final label = i == 0 ? '\${_tabs[i]} (\$pendingCount)' : _tabs[i];
+                final label = i == 0 ? '${_tabs[i]} ($pendingCount)' : _tabs[i];
                 return Padding(padding: const EdgeInsets.only(right: 10), child: GestureDetector(
                   onTap: () => setState(() => _tab = i),
                   child: Container(padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10), decoration: BoxDecoration(color: active ? c.primary : c.muted, borderRadius: BorderRadius.circular(20)),
@@ -57,7 +57,7 @@ class _MaintenanceDashboardScreenState extends ConsumerState<MaintenanceDashboar
               })),
             ),
             Expanded(child: filtered.isEmpty
-              ? Center(child: Text('No \${_tabs[_tab].toLowerCase()} requests', style: SNText.body.copyWith(color: c.mutedForeground)))
+              ? Center(child: Text('No ${_tabs[_tab].toLowerCase()} requests', style: SNText.body.copyWith(color: c.mutedForeground)))
               : RefreshIndicator(
                   onRefresh: () async => ref.invalidate(maintenanceRequestsProvider),
                   child: ListView.separated(padding: const EdgeInsets.symmetric(horizontal: 24), itemCount: filtered.length, separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -83,11 +83,11 @@ class _MaintenanceDashboardScreenState extends ConsumerState<MaintenanceDashboar
         const SizedBox(width: 12),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title.toUpperCase(), style: SNText.bodyBold.copyWith(color: c.foreground, fontSize: 13, letterSpacing: 0.5)),
-          if (room.isNotEmpty || hostel.isNotEmpty) Text('\${room.isNotEmpty ? room : ""}\${room.isNotEmpty && hostel.isNotEmpty ? " \u2022 " : ""}\$hostel', style: SNText.microAction.copyWith(color: c.mutedForeground, letterSpacing: 0.5)),
+          if (room.isNotEmpty || hostel.isNotEmpty) Text('${room.isNotEmpty ? room : ""}${room.isNotEmpty && hostel.isNotEmpty ? " \u2022 " : ""}$hostel', style: SNText.microAction.copyWith(color: c.mutedForeground, letterSpacing: 0.5)),
         ])),
         Text(priority, style: SNText.microAction.copyWith(color: sevColor, fontWeight: FontWeight.w800, letterSpacing: 1)),
       ]),
-      if (desc.isNotEmpty) ...[const SizedBox(height: 12), Text('"\$desc"', style: SNText.body.copyWith(color: c.mutedForeground, fontStyle: FontStyle.italic))],
+      if (desc.isNotEmpty) ...[const SizedBox(height: 12), Text('"$desc"', style: SNText.body.copyWith(color: c.mutedForeground, fontStyle: FontStyle.italic))],
       if (status == 'PENDING') ...[
         const SizedBox(height: 16),
         Row(children: [

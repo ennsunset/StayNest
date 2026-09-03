@@ -60,7 +60,7 @@ class RevenueReportsScreen extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Text(Money.format(total), style: SNText.headingLg.copyWith(color: Colors.white, fontSize: 28)),
                     const SizedBox(height: 4),
-                    Text('Across \${hostels.length} properties', style: SNText.caption.copyWith(color: Colors.white54)),
+                    Text('Across ${hostels.length} properties', style: SNText.caption.copyWith(color: Colors.white54)),
                   ]),
                 ),
                 const SizedBox(height: 28),
@@ -79,12 +79,12 @@ class RevenueReportsScreen extends ConsumerWidget {
                         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Text(h['name'] as String? ?? '', style: SNText.bodyBold.copyWith(color: c.foreground)),
                           const SizedBox(height: 2),
-                          Text('\$beds beds', style: SNText.microAction.copyWith(color: c.mutedForeground, letterSpacing: 1)),
+                          Text('$beds beds', style: SNText.microAction.copyWith(color: c.mutedForeground, letterSpacing: 1)),
                         ])),
                         Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                           Text(Money.format(rev), style: SNText.bodyBold.copyWith(color: c.foreground)),
                           const SizedBox(height: 2),
-                          Text('\$pct% occupancy', style: SNText.caption.copyWith(color: const Color(0xFF16A34A), fontWeight: FontWeight.w600)),
+                          Text('$pct% occupancy', style: SNText.caption.copyWith(color: const Color(0xFF16A34A), fontWeight: FontWeight.w600)),
                         ]),
                       ])),
                     );
