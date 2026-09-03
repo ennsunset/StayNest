@@ -754,7 +754,7 @@ class _AddHostelScreenState extends ConsumerState<AddHostelScreen> {
         if (_landmarkCtrl.text.trim().isNotEmpty) _reviewRow(c, 'Landmark', _landmarkCtrl.text),
         if (_descCtrl.text.trim().isNotEmpty) _reviewRow(c, 'Description', _descCtrl.text),
         if (!_isEditMode) _reviewRow(c, 'Floors', '$_floorCount'),
-        _reviewRow(c, 'Gender', _genderOptions.firstWhere((o) => o.$1 == _genderPolicy).$2),
+        _reviewRow(c, 'Gender', _genderOptions.where((o) => o.$1 == _genderPolicy).firstOrNull?.$2 ?? _genderPolicy),
         if (_gateOpeningTime.isNotEmpty || _gateClosingTime.isNotEmpty) _reviewRow(c, 'Gate Hours', '${_gateOpeningTime.isNotEmpty ? _gateOpeningTime : "—"} — ${_gateClosingTime.isNotEmpty ? _gateClosingTime : "—"}'),
         _reviewRow(c, 'Cancellation', _cancellationPolicy[0] + _cancellationPolicy.substring(1).toLowerCase()),
         if (_houseRulesList.isNotEmpty) _reviewRow(c, 'House Rules', _houseRulesList.join(', ')),

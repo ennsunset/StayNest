@@ -365,6 +365,7 @@ class _RoomManagementScreenState extends ConsumerState<RoomManagementScreen> {
   void _showEditRoomSheet(BuildContext context, SNColorTokens c, OwnerRoom room) async {
     final repo = ref.read(ownerRepositoryProvider);
 
+    var roomNumber = room.number;
     int roomCapacity = int.tryParse(room.type.split('-').first) ?? 2;
     String priceText = (room.pricePesewas / 100).toStringAsFixed(0);
     bool hasAC = room.hasAC;
@@ -400,6 +401,22 @@ class _RoomManagementScreenState extends ConsumerState<RoomManagementScreen> {
                   const SizedBox(height: SNSpace.x2),
                   Text('Edit Room ${room.number}', style: SNText.headingMd.copyWith(color: c.foreground)),
                   const SizedBox(height: SNSpace.x5),
+
+                  // Room Number
+                  Text('Room Number', style: SNText.caption.copyWith(color: c.mutedForeground)),
+                  const SizedBox(height: SNSpace.x2),
+                  TextFormField(
+                    initialValue: roomNumber,
+                    decoration: InputDecoration(
+                      hintText: 'e.g. 101, G01',
+                      filled: true, fillColor: c.background,
+                      border: OutlineInputBorder(borderRadius: SNRadius.card, borderSide: BorderSide(color: c.border)),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    ),
+                    style: SNText.body.copyWith(color: c.foreground),
+                    onChanged: (v) => roomNumber = v,
+                  ),
+                  const SizedBox(height: SNSpace.x4),
 
                   // Room capacity
                   Text('Room Capacity', style: SNText.caption.copyWith(color: c.mutedForeground)),
@@ -498,6 +515,7 @@ class _RoomManagementScreenState extends ConsumerState<RoomManagementScreen> {
                       setSheetState(() => submitting = true);
                       try {
                         await repo.updateRoom(room.id, {
+                          'number': roomNumber,
                           'type': '$roomCapacity-in-a-room',
                           'pricePesewas': (price * 100).round(),
                           'hasAC': hasAC,
@@ -520,6 +538,41 @@ class _RoomManagementScreenState extends ConsumerState<RoomManagementScreen> {
                         }
                       }
                     },
+                  ),
+                  const SizedBox(height: SNSpace.x3),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      showDialog(
+                        context: context,
+                        builder: (dCtx) => AlertDialog(
+                          title: const Text('Delete Room?'),
+                          content: Text('Permanently delete Room ${room.number}?'),
+                          actions: [
+                            TextButton(onPressed: () => Navigator.pop(dCtx), child: const Text('Cancel')),
+                            TextButton(
+                              onPressed: () async {
+                                Navigator.pop(dCtx);
+                                try {
+                                  await repo.deleteRoom(room.id);
+                                  if (mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Room deleted')));
+                                    _load();
+                                  }
+                                } catch (e) {
+                                  if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e')));
+                                }
+                              },
+                              child: Text('Delete', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                    child: Center(child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text('Delete Room', style: SNText.bodyBold.copyWith(color: const Color(0xFFDC2626), fontSize: 14)),
+                    )),
                   ),
                   const SizedBox(height: SNSpace.x4),
                 ],

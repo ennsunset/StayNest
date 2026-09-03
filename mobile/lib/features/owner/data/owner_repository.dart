@@ -397,6 +397,10 @@ class OwnerRepository {
     await dio.patch('/owner/rooms/$roomId', data: body);
   }
 
+  Future<void> deleteRoom(String roomId) async {
+    await dio.delete('/owner/rooms/$roomId');
+  }
+
   Future<void> checkoutBed(String bedId) async {
     await dio.patch('/owner/beds/$bedId/checkout');
   }

@@ -97,6 +97,14 @@ export class OwnerController {
     return this.ownerService.updateRoom(req.user.sub, roomId, dto);
   }
 
+  @Delete('rooms/:roomId')
+  deleteRoom(
+    @Req() req: any,
+    @Param('roomId', ParseUUIDPipe) roomId: string,
+  ) {
+    return this.ownerService.deleteRoom(req.user.sub, roomId);
+  }
+
   @Get('rooms/:roomId/beds')
   getBeds(@Req() req: any, @Param('roomId', ParseUUIDPipe) roomId: string) {
     return this.ownerService.getBedsForRoom(req.user.sub, roomId);

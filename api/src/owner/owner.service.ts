@@ -609,7 +609,9 @@ export class OwnerService {
     hasPrivateBath?: boolean;
     hasTV?: boolean;
     socketCount?: number;
-  }) {
+  }
+
+) {
     const [room] = await this.ds.query(
       'SELECT r.id, r.type FROM rooms r JOIN floors f ON f.id = r.floor_id JOIN buildings b ON b.id = f.building_id JOIN hostels h ON h.id = b.hostel_id WHERE r.id = $1 AND h.owner_id = $2',
       [roomId, ownerId],
@@ -677,6 +679,34 @@ export class OwnerService {
 
     return { updated: true };
   }
+
+  async deleteRoom(ownerId: string, roomId: string) {
+    // Verify ownership
+    const room = await this.ds.query(
+      `SELECT r.id FROM rooms r
+       JOIN floors f ON f.id = r.floor_id
+       JOIN buildings b ON b.id = f.building_id
+       JOIN hostels h ON h.id = b.hostel_id
+       WHERE r.id = $1 AND h.owner_id = $2`,
+      [roomId, ownerId],
+    );
+    if (!room.length) throw new Error('Room not found or not owned by you');
+
+    const active = await this.ds.query(
+      `SELECT COUNT(*) as cnt FROM bookings bk
+       JOIN beds bd ON bd.id = bk.bed_id
+       WHERE bd.room_id = $1 AND bk.status IN ('CONFIRMED', 'ACTIVE')`,
+      [roomId],
+    );
+    if (parseInt(active[0].cnt) > 0) {
+      throw new Error('Cannot delete room with active bookings');
+    }
+
+    await this.ds.query(`DELETE FROM beds WHERE room_id = $1`, [roomId]);
+    await this.ds.query(`DELETE FROM rooms WHERE id = $1`, [roomId]);
+    return { deleted: true };
+  }
+
 
 
   async checkoutBed(ownerId: string, bedId: string) {

@@ -67,6 +67,19 @@ import 'package:staynest_mobile/features/owner/presentation/bed_management_scree
 import 'package:staynest_mobile/features/owner/presentation/add_hostel_screen.dart';
 import 'package:staynest_mobile/features/owner/presentation/payment_tracking_screen.dart';
 import 'package:staynest_mobile/features/owner/presentation/owner_messages_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/owner_profile_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/revenue_reports_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/staff_management_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/staff_attendance_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/maintenance_dashboard_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/ai_insights_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/security_center_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/revenue_reports_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/staff_management_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/staff_attendance_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/maintenance_dashboard_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/ai_insights_screen.dart';
+import 'package:staynest_mobile/features/owner/presentation/security_center_screen.dart';
 
 // ── Dev ─────────────────────────────────────────────
 import 'package:staynest_mobile/features/gallery/component_gallery.dart';
@@ -102,6 +115,13 @@ abstract class Routes {
   // Owner
   static const ownerDashboard = '/owner';
   static const ownerRequests = '/owner/requests';
+  static const ownerRevenue = '/owner/revenue';
+  static const ownerStaff = '/owner/staff';
+  static const ownerAttendance = '/owner/attendance';
+  static const ownerMaintenance = '/owner/maintenance';
+  static const ownerInsights = '/owner/insights';
+  static const ownerSecurity = '/owner/security';
+  static const ownerProfile = '/owner/profile';
 
   // Standalone
   static const bookingConfirmation = '/booking-confirmation';
@@ -305,6 +325,13 @@ final router = GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (_, __) => const BookingRequestsScreen(),
     ),
+    GoRoute(path: Routes.ownerRevenue, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const RevenueReportsScreen()),
+    GoRoute(path: Routes.ownerStaff, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const StaffManagementScreen()),
+    GoRoute(path: Routes.ownerAttendance, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const StaffAttendanceScreen()),
+    GoRoute(path: Routes.ownerMaintenance, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const MaintenanceDashboardScreen()),
+    GoRoute(path: Routes.ownerInsights, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const AIInsightsScreen()),
+    GoRoute(path: Routes.ownerSecurity, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const SecurityCenterScreen()),
+    GoRoute(path: Routes.ownerProfile, parentNavigatorKey: _rootNavigatorKey, builder: (_, __) => const OwnerProfileScreen()),
     GoRoute(
       path: '/owner/reports',
       parentNavigatorKey: _rootNavigatorKey,

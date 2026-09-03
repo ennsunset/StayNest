@@ -189,8 +189,12 @@ class OwnerDashboardScreen extends ConsumerWidget {
         children: [
           _quickNavTile(c, 'Property Management', Icons.home_work_outlined, () => context.go('/owner/hostels')),
           _quickNavTile(c, 'Tenant Management', Icons.people_alt_outlined, () => context.go('/owner/tenants')),
-          _quickNavTile(c, 'Revenue Reports', Icons.bar_chart_rounded, () => context.go('/owner/reports')),
+          _quickNavTile(c, 'Revenue Reports', Icons.bar_chart_rounded, () => context.push(Routes.ownerRevenue)),
           _quickNavTile(c, 'Booking Requests', Icons.pending_actions_rounded, () => context.push(Routes.ownerRequests)),
+          _quickNavTile(c, 'Staff Management', Icons.badge_outlined, () => context.push(Routes.ownerStaff)),
+          _quickNavTile(c, 'Maintenance', Icons.build_outlined, () => context.push(Routes.ownerMaintenance)),
+          _quickNavTile(c, 'AI Insights', Icons.psychology_outlined, () => context.push(Routes.ownerInsights)),
+          _quickNavTile(c, 'Security Center', Icons.shield_outlined, () => context.push(Routes.ownerSecurity)),
         ],
       ),
     );
