@@ -6,9 +6,11 @@ part of 'notifications_repository.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$notificationsRepositoryHash() => r'notifications_repository';
+String _$notificationsRepositoryHash() =>
+    r'21b06d5715c4c03d640625b463a80452d5711caf';
 
 /// See also [notificationsRepository].
+@ProviderFor(notificationsRepository)
 final notificationsRepositoryProvider =
     AutoDisposeProvider<NotificationsRepository>.internal(
   notificationsRepository,
@@ -22,3 +24,5 @@ final notificationsRepositoryProvider =
 
 typedef NotificationsRepositoryRef
     = AutoDisposeProviderRef<NotificationsRepository>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

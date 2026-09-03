@@ -935,4 +935,136 @@ export class OwnerService {
     return { id: hostelId, updated: true };
   }
 
+
+
+  // ═══ Maintenance ═══
+  async getMaintenanceRequests(ownerId: string, status?: string) {
+    let query = `
+      SELECT mr.*, h.name as hostel_name, 
+             CONCAT('Room ', r.number) as room_label
+      FROM maintenance_requests mr
+      JOIN hostels h ON h.id = mr.hostel_id
+      LEFT JOIN bookings bk ON bk.id = mr.booking_id
+      LEFT JOIN beds bd ON bd.id = bk.bed_id
+      LEFT JOIN rooms r ON r.id = bd.room_id
+      WHERE h.owner_id = $1
+    `;
+    const params: any[] = [ownerId];
+    if (status) {
+      params.push(status);
+      query += ` AND mr.status = $${params.length}`;
+    }
+    query += ' ORDER BY mr.created_at DESC';
+    return this.ds.query(query, params);
+  }
+
+  async updateMaintenanceStatus(ownerId: string, requestId: string, body: { status: string; assignedTo?: string }) {
+    // Verify ownership
+    const [req] = await this.ds.query(
+      `SELECT mr.id FROM maintenance_requests mr
+       JOIN hostels h ON h.id = mr.hostel_id
+       WHERE mr.id = $1 AND h.owner_id = $2`,
+      [requestId, ownerId],
+    );
+    if (!req) throw new NotFoundException('Request not found');
+
+    const sets: string[] = [`status = $2`];
+    const params: any[] = [requestId, body.status];
+    if (body.assignedTo) {
+      params.push(body.assignedTo);
+      sets.push(`assigned_to = $${params.length}`);
+    }
+    sets.push('updated_at = NOW()');
+    await this.ds.query(`UPDATE maintenance_requests SET ${sets.join(', ')} WHERE id = $1`, params);
+    return { updated: true };
+  }
+
+  // ═══ Revenue Breakdown ═══
+  async getRevenueBreakdown(ownerId: string) {
+    const rows = await this.ds.query(`
+      SELECT h.id, h.name,
+        COUNT(DISTINCT r.id)::int AS room_count,
+        COUNT(DISTINCT bd.id)::int AS bed_count,
+        COALESCE(SUM(p.amount_pesewas), 0)::bigint AS revenue_pesewas,
+        COUNT(DISTINCT CASE WHEN bk.status IN ('CONFIRMED','ACTIVE','COMPLETED') THEN bk.id END)::int AS booking_count
+      FROM hostels h
+      LEFT JOIN buildings bl ON bl.hostel_id = h.id
+      LEFT JOIN floors f ON f.building_id = bl.id
+      LEFT JOIN rooms r ON r.floor_id = f.id
+      LEFT JOIN beds bd ON bd.room_id = r.id
+      LEFT JOIN bookings bk ON bk.bed_id = bd.id AND bk.status NOT IN ('CANCELLED')
+      LEFT JOIN payments p ON p.booking_id = bk.id AND p.status = 'SUCCESS'
+      WHERE h.owner_id = $1
+      GROUP BY h.id, h.name
+      ORDER BY revenue_pesewas DESC
+    `, [ownerId]);
+
+    const total = rows.reduce((sum: number, r: any) => sum + parseInt(r.revenue_pesewas || '0'), 0);
+    return {
+      totalRevenuePesewas: total,
+      hostels: rows.map((r: any) => ({
+        id: r.id,
+        name: r.name,
+        roomCount: r.room_count,
+        bedCount: r.bed_count,
+        revenuePesewas: parseInt(r.revenue_pesewas || '0'),
+        bookingCount: r.booking_count,
+        collectionPct: r.bed_count > 0 ? Math.round((r.booking_count / r.bed_count) * 100) : 0,
+      })),
+    };
+  }
+
+  // ═══ Staff ═══
+  async getStaff(ownerId: string) {
+    return this.ds.query(
+      `SELECT s.*, h.name as hostel_name FROM staff s
+       JOIN hostels h ON h.id = s.hostel_id
+       WHERE h.owner_id = $1
+       ORDER BY s.created_at DESC`,
+      [ownerId],
+    );
+  }
+
+  async addStaff(ownerId: string, body: { name: string; role: string; phone?: string; hostelId: string }) {
+    // Verify hostel ownership
+    const [h] = await this.ds.query('SELECT id FROM hostels WHERE id = $1 AND owner_id = $2', [body.hostelId, ownerId]);
+    if (!h) throw new NotFoundException('Hostel not found');
+
+    const [staff] = await this.ds.query(
+      `INSERT INTO staff (name, role, phone, hostel_id, status) VALUES ($1, $2, $3, $4, 'ACTIVE') RETURNING *`,
+      [body.name, body.role, body.phone || null, body.hostelId],
+    );
+    return staff;
+  }
+
+  async updateStaff(ownerId: string, staffId: string, body: any) {
+    const [s] = await this.ds.query(
+      `SELECT s.id FROM staff s JOIN hostels h ON h.id = s.hostel_id WHERE s.id = $1 AND h.owner_id = $2`,
+      [staffId, ownerId],
+    );
+    if (!s) throw new NotFoundException('Staff not found');
+
+    const sets: string[] = [];
+    const params: any[] = [staffId];
+    if (body.name) { params.push(body.name); sets.push(`name = $${params.length}`); }
+    if (body.role) { params.push(body.role); sets.push(`role = $${params.length}`); }
+    if (body.phone !== undefined) { params.push(body.phone); sets.push(`phone = $${params.length}`); }
+    if (body.status) { params.push(body.status); sets.push(`status = $${params.length}`); }
+    if (!sets.length) return { updated: false };
+
+    sets.push('updated_at = NOW()');
+    await this.ds.query(`UPDATE staff SET ${sets.join(', ')} WHERE id = $1`, params);
+    return { updated: true };
+  }
+
+  async removeStaff(ownerId: string, staffId: string) {
+    const [s] = await this.ds.query(
+      `SELECT s.id FROM staff s JOIN hostels h ON h.id = s.hostel_id WHERE s.id = $1 AND h.owner_id = $2`,
+      [staffId, ownerId],
+    );
+    if (!s) throw new NotFoundException('Staff not found');
+    await this.ds.query('DELETE FROM staff WHERE id = $1', [staffId]);
+    return { deleted: true };
+  }
+
 }

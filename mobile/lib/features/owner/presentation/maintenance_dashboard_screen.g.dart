@@ -1,27 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'messaging_repository.dart';
+part of 'maintenance_dashboard_screen.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$messagingRepositoryHash() =>
-    r'5d211e087fe26f28523a3024ecbb03b4ec7302c1';
+String _$maintenanceRequestsHash() =>
+    r'ae4679bed7a96f0e4e645e8b55a7350d30cd1acf';
 
-/// See also [messagingRepository].
-@ProviderFor(messagingRepository)
-final messagingRepositoryProvider =
-    AutoDisposeProvider<MessagingRepository>.internal(
-  messagingRepository,
-  name: r'messagingRepositoryProvider',
+/// See also [maintenanceRequests].
+@ProviderFor(maintenanceRequests)
+final maintenanceRequestsProvider =
+    AutoDisposeFutureProvider<List<Map<String, dynamic>>>.internal(
+  maintenanceRequests,
+  name: r'maintenanceRequestsProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$messagingRepositoryHash,
+      : _$maintenanceRequestsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef MessagingRepositoryRef = AutoDisposeProviderRef<MessagingRepository>;
+typedef MaintenanceRequestsRef
+    = AutoDisposeFutureProviderRef<List<Map<String, dynamic>>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

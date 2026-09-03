@@ -6,7 +6,7 @@ part of 'auth_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authNotifierHash() => r'04467876329024dbb055af26cfa877ef3ce8f05f';
+String _$authNotifierHash() => r'90d6fe9d7dbcb7ea0f7ee1504d2653ebb332b579';
 
 /// Holds the current user. null = not logged in.
 ///

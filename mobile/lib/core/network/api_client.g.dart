@@ -6,7 +6,7 @@ part of 'api_client.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$dioHash() => r'58e939c387aadab5e2739ce1ff791a310e042073';
+String _$dioHash() => r'4fbd7daa5c0e8a9fe991296fb3c552977708de19';
 
 /// For iOS simulator talking to macOS localhost, use:
 /// const _baseUrl = 'http://127.0.0.1:3000/api/v1';

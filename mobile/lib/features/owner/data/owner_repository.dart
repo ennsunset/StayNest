@@ -401,6 +401,51 @@ class OwnerRepository {
     await dio.delete('/owner/rooms/$roomId');
   }
 
+  // ═══ Maintenance ═══
+  Future<List<Map<String, dynamic>>> fetchMaintenanceRequests({String? status}) async {
+    final res = await dio.get('/owner/maintenance', queryParameters: {
+      if (status != null) 'status': status,
+    });
+    return (res.data as List).cast<Map<String, dynamic>>();
+  }
+
+  Future<void> updateMaintenanceStatus(String requestId, {required String status, String? assignedTo}) async {
+    await dio.patch('/owner/maintenance/$requestId', data: {
+      'status': status,
+      if (assignedTo != null) 'assignedTo': assignedTo,
+    });
+  }
+
+  // ═══ Revenue Breakdown ═══
+  Future<Map<String, dynamic>> fetchRevenueBreakdown() async {
+    final res = await dio.get('/owner/revenue/breakdown');
+    return res.data as Map<String, dynamic>;
+  }
+
+  // ═══ Staff ═══
+  Future<List<Map<String, dynamic>>> fetchStaff() async {
+    final res = await dio.get('/owner/staff');
+    return (res.data as List).cast<Map<String, dynamic>>();
+  }
+
+  Future<Map<String, dynamic>> addStaff({required String name, required String role, String? phone, required String hostelId}) async {
+    final res = await dio.post('/owner/staff', data: {
+      'name': name,
+      'role': role,
+      if (phone != null) 'phone': phone,
+      'hostelId': hostelId,
+    });
+    return res.data as Map<String, dynamic>;
+  }
+
+  Future<void> updateStaffMember(String staffId, Map<String, dynamic> body) async {
+    await dio.patch('/owner/staff/$staffId', data: body);
+  }
+
+  Future<void> removeStaff(String staffId) async {
+    await dio.delete('/owner/staff/$staffId');
+  }
+
   Future<void> checkoutBed(String bedId) async {
     await dio.patch('/owner/beds/$bedId/checkout');
   }

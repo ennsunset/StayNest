@@ -6,7 +6,7 @@ part of 'featured_hostels_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$featuredHostelsHash() => r'1527d86dbd91aa5bcd00630a231fdb4d8acb83b6';
+String _$featuredHostelsHash() => r'653e108699a0c734dfd5d66ea10b035d39a6a878';
 
 /// See also [featuredHostels].
 @ProviderFor(featuredHostels)

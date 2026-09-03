@@ -97,6 +97,50 @@ export class OwnerController {
     return this.ownerService.updateRoom(req.user.sub, roomId, dto);
   }
 
+
+  /** Get all maintenance requests across owner's hostels */
+  @Get('maintenance')
+  getMaintenanceRequests(@Req() req: any, @Query('status') status?: string) {
+    return this.ownerService.getMaintenanceRequests(req.user.sub, status);
+  }
+
+  /** Update maintenance request status */
+  @Patch('maintenance/:requestId')
+  updateMaintenanceStatus(
+    @Req() req: any,
+    @Param('requestId') requestId: string,
+    @Body() body: { status: string; assignedTo?: string },
+  ) {
+    return this.ownerService.updateMaintenanceStatus(req.user.sub, requestId, body);
+  }
+
+  /** Per-hostel revenue breakdown */
+  @Get('revenue/breakdown')
+  getRevenueBreakdown(@Req() req: any) {
+    return this.ownerService.getRevenueBreakdown(req.user.sub);
+  }
+
+  /** Staff CRUD */
+  @Get('staff')
+  getStaff(@Req() req: any) {
+    return this.ownerService.getStaff(req.user.sub);
+  }
+
+  @Post('staff')
+  addStaff(@Req() req: any, @Body() body: { name: string; role: string; phone?: string; hostelId: string }) {
+    return this.ownerService.addStaff(req.user.sub, body);
+  }
+
+  @Patch('staff/:staffId')
+  updateStaff(@Req() req: any, @Param('staffId') staffId: string, @Body() body: any) {
+    return this.ownerService.updateStaff(req.user.sub, staffId, body);
+  }
+
+  @Delete('staff/:staffId')
+  removeStaff(@Req() req: any, @Param('staffId') staffId: string) {
+    return this.ownerService.removeStaff(req.user.sub, staffId);
+  }
+
   @Delete('rooms/:roomId')
   deleteRoom(
     @Req() req: any,
