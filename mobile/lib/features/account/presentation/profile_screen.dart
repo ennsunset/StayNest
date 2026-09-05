@@ -195,9 +195,9 @@ class ProfileScreen extends ConsumerWidget {
                   });
                 }
               }),
-              _menuItem(c, Icons.description_outlined, 'Digital Contracts', () {}),
+              _menuItem(c, Icons.description_outlined, 'Digital Contracts', () => context.push('/digital-agreement')),
               _menuItem(c, Icons.receipt_long_outlined, 'Payment History', () => context.push(Routes.paymentHistory)),
-              _menuItem(c, Icons.favorite_border_rounded, 'Saved Hostels', () {}),
+              _menuItem(c, Icons.favorite_border_rounded, 'Saved Hostels', () => context.go('/saved')),
               _menuItem(c, Icons.history_rounded, 'Search History', () => context.push(Routes.searchHistory)),
               _menuItem(c, Icons.visibility_outlined, 'Recently Viewed', () => context.push(Routes.recentlyViewed)),
               _menuItem(c, Icons.electric_bolt_outlined, 'Utility Bills', () => context.push(Routes.utilityBills)),
